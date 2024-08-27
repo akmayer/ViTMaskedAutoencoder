@@ -2,3 +2,4 @@ Minecraft*
 .ipynb_checkpoints/
 models/__pycache__/
 videos/
+models/PretrainedAutoencoder.pt
