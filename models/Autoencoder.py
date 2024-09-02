@@ -47,8 +47,7 @@ class MaskedAutoencoder(nn.Module):
                 encoderNumHeads,
                 encoderNumBlocks,
                 decoderNumHeads,
-                decoderNumBlocks,
-                maskingRatio):
+                decoderNumBlocks):
         super().__init__()
         self.inpDim = inpDim
         self.embDim = embDim
@@ -56,14 +55,13 @@ class MaskedAutoencoder(nn.Module):
         self.encoderNumBlocks = encoderNumBlocks
         self.decoderNumHeads = decoderNumHeads
         self.decoderNumBlocks = decoderNumBlocks
-        self.maskingRatio = maskingRatio
 
         self.encoder = Encoder(inpDim, embDim, encoderNumHeads, encoderNumBlocks)
         self.decoder = Decoder(inpDim, embDim, decoderNumHeads, decoderNumBlocks)
 
     
-    def forward(self, inpBatch):
-        firstMaskedIdx = int(inpBatch.shape[1] * (1 - self.maskingRatio))
+    def forward(self, inpBatch, maskingRatio=0.75):
+        firstMaskedIdx = int(inpBatch.shape[1] * (1 - maskingRatio))
         scrambledInputTensor, newPositions = self.scrambleBatch(inpBatch)
         scrambledInputTensor = scrambledInputTensor.to(inpBatch.device)
         newPositions = newPositions.to(inpBatch.device)
